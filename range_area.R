@@ -36,3 +36,21 @@ sp <- "Larus dominicanus"
 kk3 <- kk[order(kk$species),]
 plot(kk3$range_area, kk2$Freq)
 tt <- lm(kk2$Freq~kk3$range_area)
+
+
+############# CYTOCHROME-B SPECIES RANGE AREA #####################
+library(readxl)
+cytb_db <- read_excel(file.choose())
+small_db <- subset(cytb_db[-1,5:8])
+colnames(small_db) <- c("spname", "location", "lat", "long")
+sdb <- small_db[ ! small_db$spname %in% "NA", ]
+# I create another database that has no "NA" as values in the column spname
+
+a1 <- findarea(db, unique(sdb$spname))
+# some of the species have missing results (NA) which is strange since I'm sure the names in my database match the ones of the ranges
+# therefore I need to remove the speices with NA as range size value
+# CONTINUE HERE
+
+
+a1$species[which(a1$range_area == max(a1$range_area))]
+a1$species[which(a1$range_area == min(a1$range_area))]
