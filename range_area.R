@@ -36,6 +36,8 @@ sp <- "Larus dominicanus"
 kk3 <- kk[order(kk$species),]
 plot(kk3$range_area, kk2$Freq)
 tt <- lm(kk2$Freq~kk3$range_area)
+abline(tt, col="red")
+dev.off()
 
 
 ############# CYTOCHROME-B SPECIES RANGE AREA #####################
