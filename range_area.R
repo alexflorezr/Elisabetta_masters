@@ -34,5 +34,8 @@ sum(table(larus6$lat)*cellareas[match(x,y)])
 
 sp <- "Larus dominicanus"
 kk3 <- kk[order(kk$species),]
+png("regresion.png")
 plot(kk3$range_area, kk2$Freq)
 tt <- lm(kk2$Freq~kk3$range_area)
+abline(tt, col="red")
+dev.off()
