@@ -33,3 +33,5 @@ midpoints <- midpoints[- 9001] + 0.5 * cellsize.lat
 areas <- sapply(midpoints, cellsurfarea, cellsize.lat = cellsize.lat, cellsize.long = 1)
 # To obtain the total area of the 1x1 degree you just have to sum the area of every 100 cells with 0.01 size
 cellareas <- tapply(areas, rep(0:89 + 0.5, each = 100), sum)
+careas <- unname(cellareas)
+str(careas)
