@@ -45,21 +45,28 @@ dev.off()
 ############# CYTOCHROME-B SPECIES RANGE AREA #####################
 library(readxl)
 cytb_db <- read_excel(file.choose())
-cytb_db <- subset(cytb_db[-1,5:8]) # I remove the first row which is part of the header and doesn't contain data
-colnames(cytb_db) <- c("spname", "location", "lat", "long")
-table(is.na(small_db$spname))
+cytb_db <- subset(cytb_db[-1, c(5,7,8)]) # I remove the first row which is part of the header and doesn't contain data
+colnames(cytb_db) <- c("spname", "lat", "long")
+table(is.na(cytb_db$spname))
+which(cytb_db$spname == "NA")
 which(cytb_db$lat == "NA")
-sdb <- cytb_db[ ! small_db$spname %in% "NA", ] # I remove the rows that have the string "NA" in the names column 
-which(is.na(sdb))
-nrow(sdb)
+sdb <- cytb_db[-which(cytb_db$spname == "NA"), ] # I remove the rows that have the string "NA" in the "names" column
+sdb2 <- sdb[-which(sdb$lat == "NA"), ] # I remove the rows that have the string "NA" in the "lat" column 
+which(is.na(sdb2))
+nrow(sdb2)
 # it gives me NA in positions that exceed the number of rows in my database
-sdb2 <- sdb[-c(134530,134531,143539,143555),] # I remove anyway the rows that it tells me they have missing values
-sdb_with_coord <- sdb2[ ! sdb2$lat %in% "NA", c(1,3,4)]
-# I remove the rows that have the string "NA" in the lat column
-which(is.na(sdb_with_coord)) # I still have NA
-nrow(sdb_with_coord) 
-# The number of rows in my dataframe is 7611 
-# however it tells me that there are NAs in the position 18716, which shouldn't exist
+sdb3 <- sdb2[-c(18714,18715,20330,20343),] # I remove anyway the rows that it tells me they have missing values
+which(is.na(sdb3)) # I still have NA
+nrow(sdb3) 
+# The number of rows in my dataframe is 7610 
+# however it tells me that there are NAs in the position 18714, which shouldn't exist
+
+# since I still don't know why it does like this, I decided to create a new table with set number of rows
+test <- as.data.frame(matrix(nrow = 7610, ncol = 2))
+colnames(test) <- c("sp_name", "lat")
+test$sp_name <- sdb2$spname
+test$lat <- sdb2$lat
+which(is.na(test))
 
 # my data don't have latitude values in decimals every 0.5 so I need to change the function
 findarea2 <- function(db, sp_names){
@@ -68,7 +75,7 @@ findarea2 <- function(db, sp_names){
   colnames(db_area) <- c("species", "range_area")
   db_area$species <- all_species
   for (sp in sp_names){
-    temp_sp <- subset(db, db$spname == sp)
+    temp_sp <- subset(db, db$sp_name == sp)
     ar <- 0
     for(l in temp_sp$lat){
       n <- floor(abs(as.numeric(l))) + 0.5
@@ -78,7 +85,7 @@ findarea2 <- function(db, sp_names){
   }
   return(db_area)
 }
-a1 <- findarea2(sdb_with_coord, unique(sdb_with_coord$spname))
+a1 <- findarea2(test, unique(test$sp_name))
 # run the function to find the area of the species that have geographic coordinates
 # it gives me error:
 #     Error in `[<-.data.frame`(`*tmp*`, which(db_area$species == sp), 2, value = numeric(0)) : 
@@ -86,38 +93,51 @@ a1 <- findarea2(sdb_with_coord, unique(sdb_with_coord$spname))
 # I think it's because of NAs in my database which I don't know how to remove.. it's weird that it gives me NAs in
 # positions that don't exist (or shouldn't) in sdb_with_coord
 
-############## END HERE #################
-############## THE PART THAT FOLLOWS IS BASED ON WRONG CALCULATIONS ###########################
 
-which(is.na(a1$range_area))
-table(is.na(a1$range_area))
-NAs <- a1[which(is.na(a1$range_area)),]
-which(NAs$species == small_db$spname)
+# try with another function
+findarea3 <- function(db, sp_names){
+  all_species <- unique(sp_names)
+  db_area <- data.frame(matrix(nrow=length(all_species), ncol=2))
+  colnames(db_area) <- c("species", "range_area")
+  db_area$species <- all_species
+  for (sp in sp_names){
+    temp_sp <- subset(db, db$sp_name == sp)
+    ar <- 0
+    for(l in temp_sp$lat){
+      x <- floor(abs(as.numeric(unlist(dimnames(table(temp_sp$lat)))))) + 0.5
+      y <- as.numeric(unlist(dimnames(cellareas)))
+      ar <- sum(table(temp_sp$lat)*cellareas[match(x,y)])
+    }
+    db_area[which(db_area$species == sp), 2] <- ar
+  }
+  return(db_area)
+}
 
-# therefore I need to remove the speices with NA as range size value
-a2 <- a1[complete.cases(a1),]
-a2$species[which(a2$range_area == max(a2$range_area))]
-a2$species[which(a2$range_area == min(a2$range_area))]
+result_db <- findarea3(test, unique(test$sp_name))
+# IT WORKS!!!!!
 
-pdf("Species range areas cytb.pdf")
-hist(a2$range_area, xlab = "Species range area", main = "Cytochrome-b species area size")
+table(is.na(result_db)) 
+result_db[which(result_db$range_area == max(result_db$range_area)), ]
+result_db[which(result_db$range_area == min(result_db$range_area)), ]
+
+pdf("cytb_sp_range_size.pdf")
+hist(result_db$range_area, xlab = "Species range area", main = "Cytochrome-b species area size")
+dev.off()
+pdf("cytb_sp_range_size_high_def.pdf")
+hist(result_db$range_area, breaks = seq(0, 2700000, by = 1000), main = "", xlab = "Species range area")
+mtext("Cytb species range size", line = 2, cex = 1.2, font = 2)
+mtext("breaks by 1000", line = 0.5)
 dev.off()
 
-# create a dataset with the species in first column and n of sequences in 2nd column (frequency)
-nseq <- as.data.frame(table(sdb$spname))
-nseq <- (nseq[-1,]) # I delete the first row because of a wrong species name
+table(test$sp_name)
+nseq <- as.data.frame(table(test$sp_name))
+result_sorted <- result_db[order(result_db$species),]
+cor(result_sorted$range_area, nseq$Freq)
+tt <- lm(nseq$Freq ~ result_sorted$range_area)
+pdf("Range_size_nseq.pdf")
+plot(result_sorted$range_area, nseq$Freq, xlab = "Species range area", ylab = "Number of sequences", cex.lab = 0.9)
+mtext("Range size over sequence availability", line = 1.7, cex = 1, font = 2)
+abline(tt, col="red")
+dev.off()
 
-sort_a2 <- a2[order(a2$species),]
-
-plot(a2$range_area, nseq$Freq)
-
-
-
-str(table(sdb2$lat))
-x <- floor(abs(as.numeric(unlist(dimnames(table(sdb$lat)))))) + 0.5
-y <- as.numeric(unlist(dimnames(cellareas)))
-sum(table(sdb2$lat)*cellareas[match(x,y)])
-
-
-
-
+############## END HERE #################
