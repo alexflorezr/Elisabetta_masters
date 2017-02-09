@@ -1,3 +1,5 @@
+############################ RANGE SIZE CMEC DATABASE #############################
+
 db <- read.delim(file.choose(), header=F, sep = ",")
 colnames(db) <- c("species", "C1", "C2", "long", "lat")
 # create an empty data frame 
@@ -54,6 +56,13 @@ sdb <- cytb_db[-which(cytb_db$spname == "NA"), ] # I remove the rows that have t
 sdb2 <- sdb[-which(sdb$lat == "NA"), ] # I remove the rows that have the string "NA" in the "lat" column 
 which(is.na(sdb2))
 nrow(sdb2)
+which(sdb2$spname == "EXTINCT")
+which(sdb2$spname == "UNPUBLISHED NAME")
+sdb4 <- sdb2[-c(530,531,2393,2394,2450,2451,4227), ] 
+# I remove rows that have under the column "names" the strings
+# "EXTINCT" and "UNPUBLISHED NAME"
+nrow(sdb4)
+
 # it gives me NA in positions that exceed the number of rows in my database
 sdb3 <- sdb2[-c(18714,18715,20330,20343),] # I remove anyway the rows that it tells me they have missing values
 which(is.na(sdb3)) # I still have NA
@@ -62,10 +71,10 @@ nrow(sdb3)
 # however it tells me that there are NAs in the position 18714, which shouldn't exist
 
 # since I still don't know why it does like this, I decided to create a new table with set number of rows
-test <- as.data.frame(matrix(nrow = 7610, ncol = 2))
+test <- as.data.frame(matrix(nrow = 7602, ncol = 2))
 colnames(test) <- c("sp_name", "lat")
-test$sp_name <- sdb2$spname
-test$lat <- sdb2$lat
+test$sp_name <- sdb4$spname
+test$lat <- sdb4$lat
 which(is.na(test))
 
 # my data don't have latitude values in decimals every 0.5 so I need to change the function
