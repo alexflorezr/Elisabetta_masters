@@ -49,13 +49,13 @@ library(readxl)
 cytb_db <- read_excel(file.choose())
 cytb_db <- subset(cytb_db[-1, c(5,7,8)]) # I remove the first row which is part of the header and doesn't contain data
 colnames(cytb_db) <- c("spname", "lat", "long")
-table(is.na(cytb_db$spname))
-which(cytb_db$spname == "NA")
-which(cytb_db$lat == "NA")
+#table(is.na(cytb_db$spname))
+#which(cytb_db$spname == "NA")
+#which(cytb_db$lat == "NA")
 sdb <- cytb_db[-which(cytb_db$spname == "NA"), ] # I remove the rows that have the string "NA" in the "names" column
 sdb2 <- sdb[-which(sdb$lat == "NA"), ] # I remove the rows that have the string "NA" in the "lat" column 
-which(is.na(sdb2))
-nrow(sdb2)
+#which(is.na(sdb2))
+#nrow(sdb2)
 which(sdb2$spname == "EXTINCT")
 which(sdb2$spname == "UNPUBLISHED NAME")
 sdb4 <- sdb2[-c(530,531,2393,2394,2450,2451,4227), ] 
@@ -78,23 +78,23 @@ test$lat <- sdb4$lat
 which(is.na(test))
 
 # my data don't have latitude values in decimals every 0.5 so I need to change the function
-findarea2 <- function(db, sp_names){
-  all_species <- unique(sp_names)
-  db_area <- data.frame(matrix(nrow=length(all_species), ncol=2))
-  colnames(db_area) <- c("species", "range_area")
-  db_area$species <- all_species
-  for (sp in sp_names){
-    temp_sp <- subset(db, db$sp_name == sp)
-    ar <- 0
-    for(l in temp_sp$lat){
-      n <- floor(abs(as.numeric(l))) + 0.5
-      ar <- ar + as.numeric(careas[n])
-    }
-    db_area[which(db_area$species == sp), 2] <- ar
-  }
-  return(db_area)
-}
-a1 <- findarea2(test, unique(test$sp_name))
+#findarea2 <- function(db, sp_names){
+#  all_species <- unique(sp_names)
+#  db_area <- data.frame(matrix(nrow=length(all_species), ncol=2))
+#  colnames(db_area) <- c("species", "range_area")
+#  db_area$species <- all_species
+#  for (sp in sp_names){
+#    temp_sp <- subset(db, db$sp_name == sp)
+#    ar <- 0
+#    for(l in temp_sp$lat){
+#      n <- floor(abs(as.numeric(l))) + 0.5
+#      ar <- ar + as.numeric(careas[n])
+#    }
+#    db_area[which(db_area$species == sp), 2] <- ar
+#  }
+#  return(db_area)
+#}
+#a1 <- findarea2(test, unique(test$sp_name))
 # run the function to find the area of the species that have geographic coordinates
 # it gives me error:
 #     Error in `[<-.data.frame`(`*tmp*`, which(db_area$species == sp), 2, value = numeric(0)) : 
@@ -104,26 +104,49 @@ a1 <- findarea2(test, unique(test$sp_name))
 
 
 # try with another function
-findarea3 <- function(db, sp_names){
+#findarea3 <- function(db, sp_names){
+#  all_species <- unique(sp_names)
+#  db_area <- data.frame(matrix(nrow=length(all_species), ncol=2))
+#  colnames(db_area) <- c("species", "range_area")
+#  db_area$species <- all_species
+#  for (sp in sp_names){
+#    temp_sp <- subset(db, db$sp_name == sp)
+#    ar <- 0
+#    for(l in temp_sp$lat){
+#      x <- floor(abs(as.numeric(unlist(dimnames(table(temp_sp$lat)))))) + 0.5
+#      y <- as.numeric(unlist(dimnames(cellareas)))
+#      ar <- sum(table(temp_sp$lat)*cellareas[match(x,y)])
+#    }
+#    db_area[which(db_area$species == sp), 2] <- ar
+#  }
+#  return(db_area)
+#}
+
+#result_db <- findarea3(test, unique(test$sp_name))
+# IT WORKS!!!!!
+
+# improved function for unique cells (final one)
+findarea4 <- function(db, sp_names){
   all_species <- unique(sp_names)
   db_area <- data.frame(matrix(nrow=length(all_species), ncol=2))
   colnames(db_area) <- c("species", "range_area")
   db_area$species <- all_species
   for (sp in sp_names){
     temp_sp <- subset(db, db$sp_name == sp)
+    temp_lat <- unique(floor(as.numeric(temp_sp$lat)))
     ar <- 0
-    for(l in temp_sp$lat){
-      x <- floor(abs(as.numeric(unlist(dimnames(table(temp_sp$lat)))))) + 0.5
+    for(l in temp_lat){
+      x <- abs(temp_lat) + 0.5
       y <- as.numeric(unlist(dimnames(cellareas)))
-      ar <- sum(table(temp_sp$lat)*cellareas[match(x,y)])
+      ar <- sum(table(temp_lat)*cellareas[match(x,y)])
     }
     db_area[which(db_area$species == sp), 2] <- ar
   }
   return(db_area)
 }
 
-result_db <- findarea3(test, unique(test$sp_name))
-# IT WORKS!!!!!
+result_db <- findarea4(test, unique(test$sp_name))
+
 
 table(is.na(result_db)) 
 result_db[which(result_db$range_area == max(result_db$range_area)), ]
@@ -133,7 +156,7 @@ pdf("cytb_sp_range_size.pdf")
 hist(result_db$range_area, xlab = "Species range area", main = "Cytochrome-b species area size")
 dev.off()
 pdf("cytb_sp_range_size_high_def.pdf")
-hist(result_db$range_area, breaks = seq(0, 2700000, by = 1000), main = "", xlab = "Species range area")
+hist(result_db$range_area, breaks = seq(0, 245000, by = 1000), main = "", xlab = "Species range area")
 mtext("Cytb species range size", line = 2, cex = 1.2, font = 2)
 mtext("breaks by 1000", line = 0.5)
 dev.off()
