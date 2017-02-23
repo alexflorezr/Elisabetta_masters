@@ -24,9 +24,10 @@ db_pct <- range_coverage(kk, result_db)
 # may come from a single place. Since the function to find the area simply adds the cells relative to latitude, some
 # cell areas may be summed multiple times, increasing the total number.
 
-hist(db_pct$coverage_pct)
+pdf("Pct_coverage_range.pdf")
+hist(db_pct$coverage_pct, ylim = c(0,2000), main = "Percentage of coverage of species ranges", cex = 2, xlab = "Range coverage (%)", ylab = "Number of species")
 hist(db_pct$coverage_pct, breaks = seq(0, 19000, by = 100))
 hist(db_pct$coverage_pct, breaks = seq(0, 19000, by = 10))
-
+dev.off()
 
 
