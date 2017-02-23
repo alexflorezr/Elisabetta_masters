@@ -191,5 +191,10 @@ mtext("Range size over sequence availability", line = 1.7, cex = 1, font = 2)
 abline(tt, col="red")
 dev.off()
 
+pdf("Logarithmic_scale_range_nseq.pdf")
+ltt <- lm(log(nseq$Freq) ~ log(result_sorted$range_area))
+plot(log(result_sorted$range_area), log(nseq$Freq), xlab = "log(range area)", ylab = "log(n° of sequences)", cex.lab = 0.9)
+abline(ltt, col="red")
+dev.off()
 ############## END HERE #################
 >>>>>>> 646e7a8316d61df8adb9138c0056f93600d166e5
