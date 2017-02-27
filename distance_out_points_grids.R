@@ -31,7 +31,8 @@ plot(r)
 # calculate distance with distance() function
 dist <- distance(r)
 plot(dist/1000)
-# I'm not quite sure what it represents
-
+# I'm getting a raster file not a measure of distance
+# And also all the cells that don't have value 1 have value NA so distance() calculates the distance also from these
+# and not only from the cell out of range in my database
 
 

@@ -52,6 +52,18 @@ cytb_backup <- cytb_result
 cytb_missing_name <- subset(cytb_result, cytb_result$In_ranges_file == "NO")
 cytb_present_name <- subset(cytb_result, cytb_result$In_ranges_file == "YES")
 
+# calculate percentage of sequences out of range over total sequences
+cytb_present_name$pct_out <- NA
+pct_f <- function(db){
+  seq_out <- db$Seqs_out
+  tot_seq <- db$Total_seqs
+  r <- (100*as.numeric(seq_out))/as.numeric(tot_seq)
+  return(r)
+}
+
+pct <- pct_f(cytb_present_name)
+cytb_present_name$pct_out <- as.integer(pct)
+
 # subset the database to have included only the species with sequences outside the range
 more_than_one <- subset(cytb_present_name, cytb_present_name$Cells_out >= 1)
 sort(as.numeric(more_than_one$Seqs_out))
@@ -135,6 +147,11 @@ co1_cells_out <- subset(co1_present_name, co1_present_name$Cells_out >= 1)
 # calculate how many sequences are outside the range
 sort(as.numeric(co1_cells_out$Seqs_out))
 sum(as.numeric(co1_cells_out$Seqs_out))
+
+# calculate percentage of sequences out of range over total seqs per species
+co1_present_name$pct_out <- NA
+co1_pct <- pct_f(co1_present_name)
+co1_present_name$pct_out <- as.integer(co1_pct)
 
 # panel plot
 pdf(file="cells_outside_the_range_co1.pdf")
