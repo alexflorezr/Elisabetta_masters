@@ -147,6 +147,7 @@ co1_cells_out <- subset(co1_present_name, co1_present_name$Cells_out >= 1)
 # calculate how many sequences are outside the range
 sort(as.numeric(co1_cells_out$Seqs_out))
 sum(as.numeric(co1_cells_out$Seqs_out))
+# 4219 sequences out of range
 
 # calculate percentage of sequences out of range over total seqs per species
 co1_present_name$pct_out <- NA
