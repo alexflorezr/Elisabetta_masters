@@ -1,3 +1,36 @@
+##### CALCULATING EUCLIDEAN DISTANCE BETWEEN GENBANK POINTS AND GEONAMES ESTIMATES ##############
+
+cytb_db #starting database
+
+db <- cytb_db[,c(2,4,5,7,8,9,10)]
+colnames(db) <- c("Acc_num", "IOC_name", "CMEC_name", "Geonames_lat", "Geonames_long", "Genbank_lat", "Genbank_long")
+
+# I remove lines with no coordinates in the Genbank columns
+final_db <- db[which(db$Genbank_lat != "NA"), ]
+final_db <- final_db[which(final_db$Genbank_lat != "xxx"), ]
+
+# I create a function to calculate euclidean distance that uses both lat and long
+euc.dist <- function(x,y,a,b){
+  sqrt((x-a)^2 + (y-b)^2)
+}
+
+# check that is correct
+a <- euc.dist(as.numeric(final_db$Geonames_long[1]), as.numeric(final_db$Geonames_lat[1]), as.numeric(final_db$Genbank_long[1]), as.numeric(final_db$Genbank_lat[1]))
+
+# I get the distance for each row of my database
+b <- c()
+for(r in 1:nrow(final_db)){
+  c <- euc.dist(as.numeric(final_db$Geonames_long[r]), as.numeric(final_db$Geonames_lat[r]), as.numeric(final_db$Genbank_long[r]), as.numeric(final_db$Genbank_lat[r]))
+  print(r)
+  print(c)
+  b <- append(b, c)
+}
+
+# I calculate the mean distance
+mean(b, na.rm = TRUE)
+
+# END HERE #
+#############################################################################################################################
 ############ CALCULATE DISTANCE FROM POINTS TO GRID CELL ##########
 
 # this is a test with just one species of my cytb database
