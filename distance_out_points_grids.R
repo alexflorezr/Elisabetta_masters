@@ -35,6 +35,14 @@ plot(dist/1000)
 # And also all the cells that don't have value 1 have value NA so distance() calculates the distance also from these
 # and not only from the cell out of range in my database
 
+# calculate distance with pointDistance() function
+NA_coor <- cbind(test$longitude[3], test$latitude[3])
+range_coor <- xyFromCell(empty_raster, cells_range)
+pointDistance(NA_coor, range_coor, lonlat = T)
+min(pointDistance(NA_coor, range_coor, lonlat = T)) # 803770.7
+#in km
+min(pointDistance(NA_coor, range_coor, lonlat = T))/1000 # 803.7707
+
 # adding cells adjacent to range ("buffer")
 ad <- adjacent(empty_raster, cells_range, pairs = FALSE)
 crange_new <- c(cells_range, ad)
