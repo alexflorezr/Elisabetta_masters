@@ -35,4 +35,14 @@ plot(dist/1000)
 # And also all the cells that don't have value 1 have value NA so distance() calculates the distance also from these
 # and not only from the cell out of range in my database
 
+# adding cells adjacent to range ("buffer")
+ad <- adjacent(empty_raster, cells_range, pairs = FALSE)
+crange_new <- c(cells_range, ad)
+r2 <- raster()
+r2[crange_new] <- 1
+plot(r2)
+plot(r)
+match(cells_samples, unique(crange_new))
+
+
 
