@@ -68,33 +68,38 @@ for(r in 1:nrow(final_db)){
 }
 
 # I calculate the mean distance
-mean(b, na.rm = TRUE)
+m <- mean(b, na.rm = TRUE)
+
+par(mfrow=c(2,1))
+pdf("distance_between_points_cytb.pdf")
+hist(b, ylim = c(0, 1000), main = "Histogram of distance between points", xlab = "Distance", xlim = c(0, 250))
+abline(v = m, col = "red")
+mtext("mean value = 6.956998 (red line)", cex = 0.8, side = 3)
+subset <- subset(b, b <= 25)
+hist(subset, main = "Histogram of distance between points", xlab = "Distance")
+mtext("Values interval between 0 and 25, mean = 6.956998", cex = 0.8, side = 3)
+dev.off()
 
 # Alternative way: use pointDistance() function of raster package
 p1 <- cbind(as.numeric(final_db$Geonames_long[1]), as.numeric(final_db$Geonames_lat[1]))
 p2 <- cbind(as.numeric(final_db$Genbank_long[1]), as.numeric(final_db$Genbank_lat[1]))
 
-d <- pointDistance(p1, p2, lonlat=F)
+d <- pointDistance(p1, p2, lonlat=T) # latitude and longitude in decimal degrees
 
 d <- c()
 for(l in 1:nrow(final_db)){
   p1 <- cbind(as.numeric(final_db$Geonames_long[l]), as.numeric(final_db$Geonames_lat[l]))
   p2 <- cbind(as.numeric(final_db$Genbank_long[l]), as.numeric(final_db$Genbank_lat[l]))
-  r <- pointDistance(p1, p2, lonlat = F)
+  r <- pointDistance(p1, p2, lonlat = T)
   print(l)
   print(r)
   d <- append(d, r)
 }
 
-# b and d are the same
-par(mfrow=c(2,1))
-pdf("distance_between_points_cytb.pdf")
-hist(d, ylim = c(0, 1000), main = "Histogram of distance between points", xlab = "Distance", xlim = c(0, 250))
-m <- mean(d, na.rm=T)
-abline(v = m, col = "red")
-mtext("mean value = 6.956998 (red line)", cex = 0.8, side = 3)
-subset <- subset(d, d <= 25)
-hist(subset, main = "Histogram of distance between points", xlab = "Distance")
-mtext("Values interval between 0 and 25, mean = 6.956998", cex = 0.8, side = 3)
-dev.off()
+# distance in km
+d_km <- d/1000
+mean(d_km, na.rm=T)
+# 682.7027 km is the mean distance between Genbank points and Geonames estimates
+
+
 
