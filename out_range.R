@@ -1,4 +1,4 @@
-##################### CYTB OUT OF RANGE ######################
+##################### CALCULATING NUMBER OF SEQUENCES OUTSIDE THE BREEDING RANGE ######################
 
 # load raster package and create empty raster
 rm(list=ls())
@@ -153,5 +153,4 @@ mtext("Number of species", side=2, line=2.5, cex=1.5)
 mtext(paste("Total number of sequences out of range =", sum(as.numeric(co1_present_name$Seqs_out)), sep = " "), side = 3, cex = 1.5)
 text(co1_bp_20, co1_table_20_plus+50, labels = co1_table_20_plus, cex = 0.6)
 dev.off()
-
 
