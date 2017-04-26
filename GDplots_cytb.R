@@ -6,12 +6,18 @@ library(readxl)
 
 gd_cytb <- read_excel("/Users/Elisabetta/Documents/UCPH/Thesis/Data/Results/CYTB/cytb_latband_insiderange.xlsx", col_names=TRUE)
 gd_cytb$Latband <- c("-60 - -50", "-50 - -40", "-40 - -30", "-30 - -20", "-20 - -10", "-10 - 0", "0 - 10", "10 - 20", "20 - 30", "30 - 40", "40 - 50", "50 - 60", "60 - 70", "70 - 80")
+gd_cytb_merged <- merge(gd_cytb, cytb_errorbar, by = "Latband")
+gd_cytb_merged <- gd_cytb_merged[match(gd_cytb$Latband, gd_cytb_merged$Latband),]
 
 # barplot with genetic diversity and number of sequences
 layout(rbind(1,2), heights=c(7,1))
 par(mar=c(5, 6, 3, 4))
 
-barplot(gd_cytb$`GD value`, horiz = T, cex.axis = 1, xlim = c(0, 0.01), cex.lab = 1, col="#76EE0090", names.arg = gd_cytb$Latband, las = 1)
+b_gd <- barplot(gd_cytb$`GD value`, horiz = T, cex.axis = 1, xlim = c(0, 0.01), cex.lab = 1, col="#76EE0090", 
+                names.arg = gd_cytb$Latband, las = 1)
+segments(gd_cytb_merged$`GD value` - gd_cytb_merged$stdev, b_gd, gd_cytb_merged$`GD value` + gd_cytb_merged$stdev, b_gd)
+arrows(gd_cytb_merged$`GD value` - gd_cytb_merged$stdev, b_gd, gd_cytb_merged$`GD value` + gd_cytb_merged$stdev, b_gd, 
+       angle = 90, code = 3, length = 0.05)
 
 par(new=T)
 
@@ -27,13 +33,15 @@ legend("center",c("GD", "Number of sequences"), fill = c("#76EE0090", "#69696990
 # load the file --> all sequences
 library(readxl)
 all_cytb <- read_excel("/Users/Elisabetta/Documents/UCPH/Thesis/Data/Results/CYTB/Birds_cytb_Latband.xlsx")
-all_cytb$latband <- c("-60 - -50", "-50 - -40", "-40 - -30", "-30 - -20", "-20 - -10", "-10 - 0", "0 - 10", "10 - 20", "20 - 30", "30 - 40", "40 - 50", "50 - 60", "60 - 70", "70 - 80")
+all_cytb$latband <- c("-60 - -50", "-50 - -40", "-40 - -30", "-30 - -20", "-20 - -10", "-10 - 0", "0 - 10",
+                      "10 - 20", "20 - 30", "30 - 40", "40 - 50", "50 - 60", "60 - 70", "70 - 80")
 
 # barplot with genetic diversity and number of sequences
 layout(rbind(1,2), heights=c(7,1))
 par(mar=c(5, 6, 3, 4))
 
-barplot(all_cytb$GD_divided_by_sp, horiz = T, cex.axis = 1, xlim = c(0, 0.008), cex.lab = 1, col="#76EE0090", names.arg = all_cytb$Latband, las = 1)
+barplot(all_cytb$GD_divided_by_sp, horiz = T, cex.axis = 1, xlim = c(0, 0.008), cex.lab = 1, col="#76EE0090", 
+        names.arg = all_cytb$Latband, las = 1)
 
 par(new=T)
 
@@ -49,9 +57,12 @@ legend("center",c("GD", "Number of sequences"), fill = c("#76EE0090", "#69696990
 ## ---- LATBAND_INSOUT ----
 library(readxl)
 all_cytb <- read_excel("/Users/Elisabetta/Documents/UCPH/Thesis/Data/Results/CYTB/Birds_cytb_Latband.xlsx")
-all_cytb$latband <- c("-60 - -50", "-50 - -40", "-40 - -30", "-30 - -20", "-20 - -10", "-10 - 0", "0 - 10", "10 - 20", "20 - 30", "30 - 40", "40 - 50", "50 - 60", "60 - 70", "70 - 80")
-gd_cytb <- read_excel("/Users/Elisabetta/Documents/UCPH/Thesis/Data/Results/CYTB/cytb_latband_insiderange.xlsx", col_names=TRUE)
-gd_cytb$Latband <- c("-60 - -50", "-50 - -40", "-40 - -30", "-30 - -20", "-20 - -10", "-10 - 0", "0 - 10", "10 - 20", "20 - 30", "30 - 40", "40 - 50", "50 - 60", "60 - 70", "70 - 80")
+all_cytb$latband <- c("-60 - -50", "-50 - -40", "-40 - -30", "-30 - -20", "-20 - -10", "-10 - 0", "0 - 10",
+                      "10 - 20", "20 - 30", "30 - 40", "40 - 50", "50 - 60", "60 - 70", "70 - 80")
+gd_cytb <- read_excel("/Users/Elisabetta/Documents/UCPH/Thesis/Data/Results/CYTB/cytb_latband_insiderange.xlsx",
+                      col_names=TRUE)
+gd_cytb$Latband <- c("-60 - -50", "-50 - -40", "-40 - -30", "-30 - -20", "-20 - -10", "-10 - 0", "0 - 10",
+                     "10 - 20", "20 - 30", "30 - 40", "40 - 50", "50 - 60", "60 - 70", "70 - 80")
 
 layout(rbind(1,2), heights=c(7,1))
 par(mar=c(5, 6, 3, 4) + 0.5)

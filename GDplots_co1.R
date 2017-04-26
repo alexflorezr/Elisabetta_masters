@@ -4,13 +4,20 @@
 library(readxl)
 
 ir_co1 <- read_excel("/Users/Elisabetta/Documents/UCPH/Thesis/Data/Results/CO1/co1_latband_insiderange.xlsx", col_names=TRUE)
-ir_co1$Latband <- c("-60 - -50", "-50 - -40", "-40 - -30", "-30 - -20", "-20 - -10", "-10 - 0", "0 - 10", "10 - 20", "20 - 30", "30 - 40", "40 - 50", "50 - 60", "60 - 70", "70 - 80")
+ir_co1$Latband <- c("-60 - -50", "-50 - -40", "-40 - -30", "-30 - -20", "-20 - -10", "-10 - 0", "0 - 10", "10 - 20", "20 - 30",
+                    "30 - 40", "40 - 50", "50 - 60", "60 - 70", "70 - 80")
+ir_co1_merged <- merge(ir_co1, co1_errorbar, by = "Latband")
+ir_co1_merged <- ir_co1_merged[match(ir_co1$Latband, ir_co1_merged$Latband),]
 
 # create the plot -> barplot with genetic diversity and number of sequences
 layout(rbind(1,2), heights=c(7,1))
 par(mar=c(5, 6, 3, 4))
 
-barplot(ir_co1$`GD value`, horiz = T, cex.axis = 1, xlim = c(0, 0.008), cex.lab = 1, col="#FF149390", names.arg = ir_co1$Latband, las = 1)
+bplot <- barplot(ir_co1$`GD value`, horiz = T, cex.axis = 1, xlim = c(0, 0.008), cex.lab = 1, col="#FF149390", 
+        names.arg = ir_co1$Latband, las = 1)
+segments(ir_co1_merged$`GD value` - ir_co1_merged$stdev, bplot, ir_co1_merged$`GD value` + ir_co1_merged$stdev, bplot)
+arrows(ir_co1_merged$`GD value` - ir_co1_merged$stdev, bplot, ir_co1_merged$`GD value` + ir_co1_merged$stdev, bplot, 
+       angle = 90, code = 3, length = 0.05)
 
 par(new=T)
 
@@ -26,13 +33,15 @@ legend("center",c("GD", "Number of sequences"), fill = c("#FF149390", "#69696990
 # load the file --> all sequences
 library(readxl)
 all_co1 <- read_excel("/Users/Elisabetta/Documents/UCPH/Thesis/Data/Results/CO1/co1_latband_allseqs.xlsx")
-all_co1$Latband <- c("-60 - -50", "-50 - -40", "-40 - -30", "-30 - -20", "-20 - -10", "-10 - 0", "0 - 10", "10 - 20", "20 - 30", "30 - 40", "40 - 50", "50 - 60", "60 - 70", "70 - 80")
+all_co1$Latband <- c("-60 - -50", "-50 - -40", "-40 - -30", "-30 - -20", "-20 - -10", "-10 - 0", "0 - 10", 
+                     "10 - 20", "20 - 30", "30 - 40", "40 - 50", "50 - 60", "60 - 70", "70 - 80")
 
 # create the plot -> barplot with genetic diversity and number of sequences
 layout(rbind(1,2), heights=c(7,1))
 par(mar=c(5, 6, 3, 4))
 
-barplot(all_co1$`GD value`, horiz = T, cex.axis = 1, xlim = c(0, 0.008), cex.lab = 1, col="#FF149390", names.arg = all_co1$Latband, las = 1)
+barplot(all_co1$`GD value`, horiz = T, cex.axis = 1, xlim = c(0, 0.008), cex.lab = 1, col="#FF149390", 
+        names.arg = all_co1$Latband, las = 1)
 
 par(new=T)
 
@@ -48,9 +57,11 @@ legend("center",c("GD", "Number of sequences"), fill = c("#FF149390", "#69696990
 ## ---- CO1_INSOUT_LATBAND ----
 library(readxl)
 all_co1 <- read_excel("/Users/Elisabetta/Documents/UCPH/Thesis/Data/Results/CO1/co1_latband_allseqs.xlsx")
-all_co1$Latband <- c("-60 - -50", "-50 - -40", "-40 - -30", "-30 - -20", "-20 - -10", "-10 - 0", "0 - 10", "10 - 20", "20 - 30", "30 - 40", "40 - 50", "50 - 60", "60 - 70", "70 - 80")
+all_co1$Latband <- c("-60 - -50", "-50 - -40", "-40 - -30", "-30 - -20", "-20 - -10", "-10 - 0", "0 - 10", 
+                     "10 - 20", "20 - 30", "30 - 40", "40 - 50", "50 - 60", "60 - 70", "70 - 80")
 ir_co1 <- read_excel("/Users/Elisabetta/Documents/UCPH/Thesis/Data/Results/CO1/co1_latband_insiderange.xlsx", col_names=TRUE)
-ir_co1$Latband <- c("-60 - -50", "-50 - -40", "-40 - -30", "-30 - -20", "-20 - -10", "-10 - 0", "0 - 10", "10 - 20", "20 - 30", "30 - 40", "40 - 50", "50 - 60", "60 - 70", "70 - 80")
+ir_co1$Latband <- c("-60 - -50", "-50 - -40", "-40 - -30", "-30 - -20", "-20 - -10", "-10 - 0", "0 - 10", 
+                    "10 - 20", "20 - 30", "30 - 40", "40 - 50", "50 - 60", "60 - 70", "70 - 80")
 
 layout(rbind(1,2), heights=c(7,1))
 par(mar=c(5, 6, 3, 4) + 0.5)
