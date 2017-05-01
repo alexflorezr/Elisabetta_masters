@@ -8,6 +8,7 @@ cytb_more_than_5 <- read.csv("/Users/Elisabetta/Documents/UCPH/Thesis/Data/Resul
 cytb_merged <- merge(cytb_all, cytb_more_than_5, by = 'Grid_ID')
 cytb_merged <- cytb_merged[, c(1,6,11)]
 
+
 par(mar = c(5,5,4,2))
 plot(cytb_merged$GD.x, cytb_merged$GD.y, xlab = "GD all sequences", ylab = "GD more than 5 sequences", main = "Cytochrome-b")
 cytb_cor <- cor.test(x = cytb_merged$GD.x, y = cytb_merged$GD.y)
