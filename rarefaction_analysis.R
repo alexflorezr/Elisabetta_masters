@@ -62,7 +62,8 @@ cytb <- cytb[-which(is.nan(cytb$num_mut_bp)),]
 sp_names <- unique(cytb$species)
 grid_cell <- unique(cytb$grid_id)
 cytb_rarefaction <- rarefaction_f(cytb, sp_names, grid_cell)
-write.csv(cytb_rarefaction, "/Users/Elisabetta/Documents/UCPH/Thesis/Data/Sensitivity analysis/CYTB/rarefaction_result_cytb.csv")
+write.csv(cytb_rarefaction, "/Users/Elisabetta/Documents/UCPH/Thesis/Data/Sensitivity analysis/CYTB/rarefaction_result_cytb.csv",
+          row.names = F, quote = F)
 
 ####################################################################################
 ## CO1
@@ -75,5 +76,6 @@ spname <- unique(co1$species)
 grids <- unique(co1$grid_id)
 
 co1_rarefaction <- rarefaction_f(co1, spname, grids)
-write.csv(co1_rarefaction, "/Users/Elisabetta/Documents/UCPH/Thesis/Data/Sensitivity analysis/CO1/rarefaction_result_co1.csv")
+write.csv(co1_rarefaction, "/Users/Elisabetta/Documents/UCPH/Thesis/Data/Sensitivity analysis/CO1/rarefaction_result_co1.csv",
+          row.names = F, quote = F)
 
