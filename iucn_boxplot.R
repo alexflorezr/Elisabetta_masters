@@ -51,8 +51,8 @@ b2 <- boxplot(Nuc_div ~ IUCN, data = cytb_less_categories,
 # Kruskal-Wallis test and post hoc Dunn's test
 library(PMCMR)
 kw <- kruskal.test(Nuc_div ~ IUCN, data = cytb_less_categories)
-posthoc.kruskal.dunn.test(Nuc_div ~ IUCN, data = cytb_less_categories, p.adjust.method = 'holm')
-posthoc.kruskal.dunn.test(Nuc_div ~ IUCN, data = cytb_less_categories, p.adjust.method = 'bonferroni')
+posthoc.kruskal.dunn.test(Nuc_div ~ factor(IUCN), data = cytb_less_categories, p.adjust.method = 'holm')
+posthoc.kruskal.dunn.test(Nuc_div ~ factor(IUCN), data = cytb_less_categories, p.adjust.method = 'bonferroni')
 
 #######################
 LC <- cytb_merged_more5seqs[which(cytb_merged_more5seqs$IUCN == 'LC'),2]
