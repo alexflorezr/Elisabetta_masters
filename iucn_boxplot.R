@@ -29,32 +29,33 @@ cytb_merged_more5seqs <- subset(cytb_merged, cytb_merged$Num_seqs > 5)
 cytb_merged_more10seqs <- subset(cytb_merged, cytb_merged$Num_seqs > 10)
 cytb_merged_corrected <- cytb_merged[-which(cytb_merged$Nuc_div > 0.1),]
 
-## ---- boxplot1 ----
-# create boxplot
-par(mar = c(5,5,4,2))
-b <- boxplot(Nuc_div ~ IUCN, data = cytb_merged_more5seqs, xlab = "IUCN cateogries", ylab = "Nucleotide diversity", cex.axis = 0.8, las =2, main = "Species with more than 10 sequences")
-
-## ---- boxplot2 ----
 # merging some of the categories and excluding NR (= not recognized)
 cytb_less_categories <- cytb_merged_more5seqs
-unique(cytb_less_categories$IUCN) # look which categories are present in order to know what to merge
+#unique(cytb_less_categories$IUCN) # look which categories are present in order to know what to merge
 
 cytb_less_categories[which(cytb_less_categories$IUCN == "CR (PEW)"),5] <- "CR"
 cytb_less_categories <- cytb_less_categories[-which(cytb_less_categories$IUCN == "NR"),]
 cytb_less_categories$IUCN <- factor(cytb_less_categories$IUCN, levels = c("LC", "NT", "VU", "EN", "CR", "EW"))
 
+## ---- boxplot1 ----
+# create boxplot
+par(mar = c(5,5,4,2))
+b <- boxplot(Nuc_div ~ IUCN, data = cytb_merged_more5seqs, xlab = "IUCN cateogries", ylab = "Nucleotide diversity", cex.axis = 0.8, las =2, main = "Species with more than 5 sequences")
+
+## ---- boxplot2 ----
+# create boxplot with less categories
 b2 <- boxplot(Nuc_div ~ IUCN, data = cytb_less_categories, 
               xlab = "IUCN cateogries", ylab = "Nucleotide diversity", 
               col = c("#228B22","#C0FF3E","#FFD700","#EE7600","#CD2626","#551A8B"),
               main = "Cytochrome-b")
 
-# Kruskal-Wallis test and post hoc Dunn's test
+## ---- Kruskal-Wallis test and post hoc Dunn test ----
 library(PMCMR)
-kw <- kruskal.test(Nuc_div ~ IUCN, data = cytb_less_categories)
+kruskal.test(Nuc_div ~ IUCN, data = cytb_less_categories)
 posthoc.kruskal.dunn.test(Nuc_div ~ factor(IUCN), data = cytb_less_categories, p.adjust.method = 'holm')
-posthoc.kruskal.dunn.test(Nuc_div ~ factor(IUCN), data = cytb_less_categories, p.adjust.method = 'bonferroni')
+#posthoc.kruskal.dunn.test(Nuc_div ~ factor(IUCN), data = cytb_less_categories, p.adjust.method = 'bonferroni')
 
-#######################
+## ---- categories ----
 LC <- cytb_merged_more5seqs[which(cytb_merged_more5seqs$IUCN == 'LC'),2]
 NT <- cytb_merged_more5seqs[which(cytb_merged_more5seqs$IUCN == 'NT'),2]
 VU <- cytb_merged_more5seqs[which(cytb_merged_more5seqs$IUCN == 'VU'),2]
@@ -64,7 +65,7 @@ EW <- cytb_merged_more5seqs[which(cytb_merged_more5seqs$IUCN == 'EW'),2]
 
 grouped <- list(g1=c(LC, NT), g2=VU, g3=EN, g4=CR, g5=EW)
 kruskal.test(grouped)
-posthoc.kruskal.dunn.test(grouped, p.adjust.method = 'bonferroni')
+posthoc.kruskal.dunn.test(grouped, p.adjust.method = 'holm')
 
 
 
