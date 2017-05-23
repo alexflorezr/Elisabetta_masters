@@ -3,7 +3,7 @@
 library(readxl)
 
 cytb_all <- read_excel("/Users/Elisabetta/Documents/UCPH/Thesis/Data/Results/CYTB/cytb_grid_insiderange.xlsx")
-cytb_more_than_5 <- read.csv("/Users/Elisabetta/Documents/UCPH/Thesis/Data/Results/CYTB/cytb_grid_more5seqs.csv")
+cytb_more_than_5 <- read.csv("/Users/Elisabetta/Documents/UCPH/Thesis/Data/Sensitivity analysis/CYTB/cytb_grid_more5seqs.csv")
 
 cytb_merged <- merge(cytb_all, cytb_more_than_5, by = 'Grid_ID')
 cytb_merged <- cytb_merged[, c(1,6,11)]
@@ -20,7 +20,7 @@ abline(l, col = "red")
 library(readxl)
 
 co1_all <- read_excel("/Users/Elisabetta/Documents/UCPH/Thesis/Data/Results/CO1/co1_grid_insiderange.xlsx")
-co1_more_than_5 <- read.csv("/Users/Elisabetta/Documents/UCPH/Thesis/Data/Results/CO1/co1_grid_more5seqs.csv")
+co1_more_than_5 <- read.csv("/Users/Elisabetta/Documents/UCPH/Thesis/Data/Sensitivity analysis/CO1/co1_grid_more5seqs.csv")
 colnames(co1_all) <- c("Grid_ID", "Num_sps", "Num_seqs", "Nuc_div", "Tot_bp", "GD")
 
 co1_merged <- merge(co1_all, co1_more_than_5, by = "Grid_ID")

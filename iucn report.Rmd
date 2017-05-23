@@ -27,14 +27,6 @@ If LC and NT are grouped together and the test is run again, we see that the spe
 <<categories>>
 ```
 
-With this result, it would be interesting to test for a congruence between the map of genetic diversity and a map of threatened species richness. In their papers, both Grenyer *et al.* (2006) and Orme *et al.* (2005) show the global distribution of threatened vertebrate species. They obtained the species richness map by calculating the total number of threatened species (VU, EN, CR categories) in each grid cell of 1x1 resolution. Threatened bird species richness is concentrated in the tropics and subtropics, especially along the Andes, Indonesia and the Burma region; these are also the areas that we see hosting the highest genetic diversity. Therefore, it would be interesting to check wether we see this overlap with our dataset. We could either use only VU, EN and CR species and see in which grid cell they fall within, or we can use all the categories and, as Alex suggested, give a "rank" value to each grid cell and compare it with the GD value of that grid cell. The ranking could start from 0 to 5, depending on the different categories, with DD = 0, LC = 1, NT = 2, VU = 3, EN = 4, CR = 5, each cell having an average of the species ranks.  
-
-**References:**  
-
-* Grenyer, R., C. D. L. Orme, S. F. Jackson, G. H. Thomas, R. G. Davies, T. J. Davies, K. E. Jones, V. A. Olson, R. S. Ridgely, P. C. Rasmussen, T.-S. Ding, P. M. Bennett, T. M. Blackburn, K. J. Gaston, J. L. Gittleman and I. P. F. Owens (2006). "Global distribution and conservation of rare and threatened vertebrates." *Nature* **444**(7115): 93-96.
-* Orme, C. D. L., R. G. Davies, M. Burgess, F. Eigenbrod, N. Pickup, V. A. Olson, A. J. Webster, D. Tzung-Su, P. C. Rasmussen, R. S. Ridgely, A. J. Stattersfield, P. M. Bennett, T. M. Blackburn, K. J. Gaston and I. P. F. Owens (2005). "Global hotspots of species richness are not congruent with endemism or threat." *Nature* **436**(7053): 1016-1019.
-\newpage
-
 ```{r iucn, echo=FALSE, fig.cap="Nucleotide diversity among all categories present in IUCN Red List. CR = critically endangered, CR (PEW) = possibly extinct in the wild, CR (PE) = possibly extinct, DD = data deficient, EN = endangered, EW = extinct in the wild, LC = least concern, NR = not recognized, NT = near threatened, VU = vulnerable."}
   <<cytb_iucn>>
   <<boxplot1>>
