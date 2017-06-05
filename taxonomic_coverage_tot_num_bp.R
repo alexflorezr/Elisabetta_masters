@@ -5,7 +5,8 @@ library(readxl)
 
 range_db <- read.csv("/Users/Elisabetta/Documents/UCPH/Thesis/Data/Results/Map of Ignorance/ranges_gridded.txt", header = T, sep = ";")
 range_db <- range_db[,c(3,6)] # keep only column with species name and grid ID
-agg <- aggregate(. ~ FID_1, data = range_db, FUN = length)
+agg <- aggregate(. ~ FID_1, data = range_db, FUN = function(x){length(unique(x))})
+
 colnames(agg) <- c("Grid_ID", "Num_species_range")
 
 cytb_grid <- read_excel("/Users/Elisabetta/Documents/UCPH/Thesis/Data/Results/CYTB/cytb_grid_insiderange.xlsx")
@@ -16,7 +17,7 @@ colnames(grid_new) <- c("Grid_ID", "Num_species_range", "Num_species_cytb")
 final_grid <- grid_new
 final_grid$Pct <- with(final_grid, 100/(Num_species_range/Num_species_cytb))
 
-write.csv(final_grid, "/Users/Elisabetta/Documents/UCPH/Thesis/Data/Results/Map of Ignorance/taxonomic_coverage_cytb2.csv",
+write.csv(final_grid, "/Users/Elisabetta/Documents/UCPH/Thesis/Data/Results/Map of Ignorance/taxonomic_coverage_cytb.csv",
           quote = F, row.names = F)
 
 ## CO1 ##
